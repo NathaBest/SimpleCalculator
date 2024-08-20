@@ -25,13 +25,13 @@ jobs:
 
       - name: Build project
         run: |
-          javac Main.java  # Adjust if your Main.java is in a specific folder
+          javac src/Main.java  # Adjust path as needed
 
       - name: Upload build artifacts
         uses: actions/upload-artifact@v3
         with:
           name: build-artifacts
-          path: ./  # Adjust this path to only include the necessary build files
+          path: ./src/*.class  # Adjust this path to include the compiled .class files
 
   test:
     name: Test
