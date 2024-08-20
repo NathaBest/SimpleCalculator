@@ -21,18 +21,17 @@ jobs:
         uses: actions/setup-java@v3
         with:
           java-version: '17'
-          distribution: 'temurin' # Set the distribution to use
+          distribution: 'temurin'
 
       - name: Build project
         run: |
-          javac src/Main.java
-        working-directory: ./src
+          javac Main.java  # Adjust if your Main.java is in a specific folder
 
       - name: Upload build artifacts
         uses: actions/upload-artifact@v3
         with:
           name: build-artifacts
-          path: .
+          path: ./  # Adjust this path to only include the necessary build files
 
   test:
     name: Test
@@ -47,11 +46,11 @@ jobs:
         uses: actions/setup-java@v3
         with:
           java-version: '17'
-          distribution: 'temurin' # Set the distribution to use
+          distribution: 'temurin'
 
       - name: Run tests
         run: |
-          echo "No tests to run"
+          echo "No tests to run"  # Replace with actual test commands when ready
 
       - name: Upload test results
         uses: actions/upload-artifact@v3
@@ -71,5 +70,4 @@ jobs:
 
       - name: Deploy to staging
         run: |
-          echo "Deploying to staging environment..."
-          # Add deployment commands here
+          echo "Deploying to staging environment..."  # Replace with actual deployment commands
