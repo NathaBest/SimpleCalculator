@@ -80,42 +80,29 @@ jobs:
 
     steps:
       - name: Notify Microsoft Teams
-        uses: actions/github-script@v6
-        with:
-          script: |
-            const axios = require('axios');
-            const webhookUrl = process.env.TEAMS_WEBHOOK_URL;
-            const message = {
-              "@type": "MessageCard",
-              "@context": "https://schema.org/extensions",
-              "themeColor": "0076D7",
-              "title": "Build Successful",
-              "text": `The build for commit [${process.env.GITHUB_SHA}](https://github.com/${process.env.GITHUB_REPOSITORY}/commit/${process.env.GITHUB_SHA}) was successful!`,
-              "sections": [{
-                "facts": [
-                  {
-                    "name": "Repository:",
-                    "value": process.env.GITHUB_REPOSITORY
-                  },
-                  {
-                    "name": "Commit:",
-                    "value": process.env.GITHUB_SHA
-                  },
-                  {
-                    "name": "Build URL:",
-                    "value": `${process.env.GITHUB_SERVER_URL}/${process.env.GITHUB_REPOSITORY}/actions/runs/${process.env.GITHUB_RUN_ID}`
-                  }
-                ]
-              }]
-            };
-
-            axios.post(webhookUrl, message)
-              .then(response => {
-                console.log('Message posted to Teams');
-              })
-              .catch(error => {
-                console.error('Error posting message to Teams:', error);
-                process.exit(1);
-              });
-        env:
-          TEAMS_WEBHOOK_URL: ${{ secrets.TEAMS_WEBHOOK_URL }}
+        run: |
+          curl -H 'Content-Type: application/json' \
+               -d '{
+                 "@type": "MessageCard",
+                 "@context": "https://schema.org/extensions",
+                 "themeColor": "0076D7",
+                 "title": "Build Successful",
+                 "text": "The build for commit '"${GITHUB_SHA}"' was successful!",
+                 "sections": [{
+                   "facts": [
+                     {
+                       "name": "Repository:",
+                       "value": "'"${GITHUB_REPOSITORY}"'"
+                     },
+                     {
+                       "name": "Commit:",
+                       "value": "'"${GITHUB_SHA}"'"
+                     },
+                     {
+                       "name": "Build URL:",
+                       "value": "'"${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID}"'"
+                     }
+                   ]
+                 }]
+               }' \
+               ${{ secrets.TEAMS_WEBHOOK_URL }}
